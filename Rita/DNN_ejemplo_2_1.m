@@ -3,8 +3,8 @@ close all
 clear all
 clc
 %% Parameters
-Np     = 500;                             % simulation time
-X      = zeros(2, Np);                    % states over time
+Np     = 500;                             % simulation time (S)
+X      = zeros(2, Np);                    % states over time 
 hX     = X;                               % approximate state
 X(:,1) = [10; -10];                       % initial state
 t      = 1:Np;                            % simulation time vector
