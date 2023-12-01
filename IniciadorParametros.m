@@ -139,25 +139,25 @@ Phi2=[Phi,zeros(nq);zeros(nq),Phi];
 iPhi=inv(Phi);
 
 % %modal reduction
-% r=5;
-% k=2*r;
-% W2r=W2(1:r,1:r);
-% Zr=Z(1:r,1:r);
-% Phir=Phi(:,1:r);
-% iPhir=iPhi(1:r,:);
-% Phir2=[Phir,zeros(nq,r);zeros(nq,r),Phir];
-% iPhir2=[iPhir,zeros(r,nq);zeros(r,nq),iPhir];
-% 
-% Am2=[zeros(r,r),eye(r);
-%     -W2r, -Zr];
-% Bm2=[zeros(r,m);                    %%%This will be useful for optimal SAP
-%     Phir'*Fbc];
-% 
-% Cm2=[Hbc*Phir,zeros(p,r)];
+r=5;
+k=2*r;
+W2r=W2(1:r,1:r);
+Zr=Z(1:r,1:r);
+Phir=Phi(:,1:r);
+iPhir=iPhi(1:r,:);
+Phir2=[Phir,zeros(nq,r);zeros(nq,r),Phir];
+iPhir2=[iPhir,zeros(r,nq);zeros(r,nq),iPhir];
+
+Am2=[zeros(r,r),eye(r);
+    -W2r, -Zr];
+Bm2=[zeros(r,m);                    %%%This will be useful for optimal SAP
+    Phir'*Fbc];
+
+Cm2=[Hbc*Phir,zeros(p,r)];
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%[zeta_min,i]=min(zeta);
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+[zeta_min,i]=min(zeta);
 cr=zeros(1,r);
 i=1;  %mode
 cr(i)=1;
@@ -166,20 +166,20 @@ Cp=[cr,zeros(1,r)];
 
 Cm=[ones(1,r),zeros(1,r)];
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%Sensor Actuator Performance Measure (SAP)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%Sensor Actuator Performance Measure (SAP)
 
-%zetad=1/sqrt(2);
+zetad=1/sqrt(2);
 zetad=0.7;
-%zetad=1;
+zetad=1;
 zetag=zetad-zeta(i);
 
 
 
 PhiB=Phir'*Fbc;
 PhiC=Hbc*Phir;
-%PB=Phi'*Fbc;
-%PC=Hbc*Phi;
+PB=Phi'*Fbc;
+PC=Hbc*Phi;
 
 L1=max(abs(PhiB(i,:)));
 L2=min(abs(PhiB(i,:)));
@@ -206,8 +206,8 @@ for h=1:p
             for j=1:r-1
                 rm=rmodes(j);
                 au(j)=abs(PhiC(h,rm))*abs(PhiB(rm,f))/abs(w2(rm)-w2(i));
-                %c2(j) =abs(PhiC(h,rm))*abs(PhiB(rm,f))/sqrt((w2(rm)-w2(i))^2+(2*zeta(rm)*w(rm)*w(i))^2);
-                %c8(j)=abs(PhiC(h,rm))*abs(PhiB(rm,f))/(2*zeta(rm)*w(rm));           
+                c2(j) =abs(PhiC(h,rm))*abs(PhiB(rm,f))/sqrt((w2(rm)-w2(i))^2+(2*zeta(rm)*w(rm)*w(i))^2);
+                c8(j)=abs(PhiC(h,rm))*abs(PhiB(rm,f))/(2*zeta(rm)*w(rm));           
             end      
         end
         mu0(h,f)=L1*ci/(2*zeta(i)*w2(i));
@@ -224,7 +224,7 @@ end
 %----------------------------------------------
 % Parameters initialization for DNN
 %----------------------------------------------
-global V1 W1 sigmoid K1 K2 P V0 l Lambda A 
+% global V1 W1 sigmoid K1 K2 P V0 l Lambda A 
 nnode=44;                              %NO SÉ QUE SE SUPONE QUE SEA NNODE AQUÍ
 V1 = 2*rand(nnode,nnode)-1;			      % weigth matrix
 W1 = 2*rand(nnode,nnode)-1;			      % weigth matrix
@@ -236,8 +236,9 @@ Kmask 			= KK;
 V1		        = V1.*Kmask;
 W1              = W1.*Kmask;
 V0              = V1;
+W0              =W1;                     %%YO AGREGUE ESTO PARA INICIALIZAR EN SIMULINK
 %
-sigmoid = @(b,x)( 1./(1+exp(-b*x)));
+% sigmoid = @(b,x)( 1./(1+exp(-b*x)));
 
 
 
