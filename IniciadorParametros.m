@@ -7,7 +7,7 @@ nne=2;      %Nodos Elementos
 dof=2;      %Grados de libertad
 L=1;        %Large %m
 Le=L/ne;    %Element distance
-E=69e9;     %Young's module N/m2
+E=69e6;     %Young's module N/m2
 
 a=0.0015;   
 d=2e-3;     %tickness m
@@ -239,7 +239,12 @@ V0              = V1;
 W0              =W1;                     %%YO AGREGUE ESTO PARA INICIALIZAR EN SIMULINK
 %
 % sigmoid = @(b,x)( 1./(1+exp(-b*x)));
-
+h=0.01;                       %sample time   
+K1		= 2.2802;
+K2		= 2.7468;
+I       = eye(nnode);
+l 		= 1.1620;
+P       = I;%SPDmatrix(nnode);
 
 
 
