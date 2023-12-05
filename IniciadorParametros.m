@@ -245,7 +245,19 @@ K2		= 2.7468;
 I       = eye(nnode);
 l 		= 1.1620;
 P       = I;%SPDmatrix(nnode);
+Lambda	= SPDmatrix(nnode);
+l 		= 1.1620;
 
 
+function A = SPDmatrix(size)
+    % Generate a random symmetric matrix
+    A = randn(size, size);
+
+    % Make the matrix symmetric
+    A = 0.5 * (A + A');
+
+    % Make the matrix positive definite
+    A = A + size * eye(size);
+end
 
 
