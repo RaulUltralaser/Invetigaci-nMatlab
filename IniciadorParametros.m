@@ -223,43 +223,43 @@ end
 %% DNN
 %----------------------------------------------
 % Parameters initialization for DNN
-%----------------------------------------------
-% global V1 W1 sigmoid K1 K2 P V0 l Lambda A 
-nnode=44;                              %Está relacionado a FF
-V1 = 2*rand(nnode,nnode)-1;			      % weigth matrix
-W1 = 2*rand(nnode,nnode)-1;			      % weigth matrix
-% us = MeasureData(0);                % "real" measurement
-% u  = us;                            % first state of the system
-%
-Kmask 			= KK;
-% Kmask(Kmask~=0) = 1;
-V1		        = V1.*Kmask;
-W1              = W1.*Kmask;
-V0              = V1;
-W0              =W1;                     %%YO AGREGUE ESTO PARA INICIALIZAR EN SIMULINK
-%
-% sigmoid = @(b,x)( 1./(1+exp(-b*x)));
-h=0.01;                       %sample time   
-K1		= 2.2802;
-K2		= 2.7468;
-I       = eye(nnode);
-l 		= 1.1620;
-P       = I;%SPDmatrix(nnode);
-Lambda	= SPDmatrix(nnode);
-l 		= 1.1620;
-aa      = -25;%-51.1440;
-An       = aa*eye(nnode);   %Cambié este nombre originalmente es A
-
-
-function A = SPDmatrix(size)
-    % Generate a random symmetric matrix
-    A = randn(size, size);
-
-    % Make the matrix symmetric
-    A = 0.5 * (A + A');
-
-    % Make the matrix positive definite
-    A = A + size * eye(size);
-end
+% %----------------------------------------------
+% % global V1 W1 sigmoid K1 K2 P V0 l Lambda A 
+% nnode=44;                              %Está relacionado a FF
+% V1 = 2*rand(nnode,nnode)-1;			      % weigth matrix
+% W1 = 2*rand(nnode,nnode)-1;			      % weigth matrix
+% % us = MeasureData(0);                % "real" measurement
+% % u  = us;                            % first state of the system
+% %
+% Kmask 			= KK;
+% % Kmask(Kmask~=0) = 1;
+% V1		        = V1.*Kmask;
+% W1              = W1.*Kmask;
+% V0              = V1;
+% W0              =W1;                     %%YO AGREGUE ESTO PARA INICIALIZAR EN SIMULINK
+% %
+% % sigmoid = @(b,x)( 1./(1+exp(-b*x)));
+% h=0.01;                       %sample time   
+% K1		= 2.2802;
+% K2		= 2.7468;
+% I       = eye(nnode);
+% l 		= 1.1620;
+% P       = I;%SPDmatrix(nnode);
+% Lambda	= SPDmatrix(nnode);
+% l 		= 1.1620;
+% aa      = -25;%-51.1440;
+% An       = aa*eye(nnode);   %Cambié este nombre originalmente es A
+% 0.0
+% 
+% function A = SPDmatrix(size)
+%     % Generate a random symmetric matrix
+%     A = randn(size, size);
+% 
+%     % Make the matrix symmetric
+%     A = 0.5 * (A + A');
+% 
+%     % Make the matrix positive definite
+%     A = A + size * eye(size);
+% end
 
 
