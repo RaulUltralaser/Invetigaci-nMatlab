@@ -225,7 +225,7 @@ end
 % Parameters initialization for DNN
 %----------------------------------------------
 % global V1 W1 sigmoid K1 K2 P V0 l Lambda A 
-nnode=44;                              %NO SÉ QUE SE SUPONE QUE SEA NNODE AQUÍ
+nnode=44;                              %Está relacionado a FF
 V1 = 2*rand(nnode,nnode)-1;			      % weigth matrix
 W1 = 2*rand(nnode,nnode)-1;			      % weigth matrix
 % us = MeasureData(0);                % "real" measurement
@@ -247,6 +247,8 @@ l 		= 1.1620;
 P       = I;%SPDmatrix(nnode);
 Lambda	= SPDmatrix(nnode);
 l 		= 1.1620;
+aa      = -25;%-51.1440;
+An       = aa*eye(nnode);   %Cambié este nombre originalmente es A
 
 
 function A = SPDmatrix(size)
