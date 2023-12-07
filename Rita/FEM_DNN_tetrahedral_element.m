@@ -21,7 +21,7 @@ sdofs = nnode*ndof;				% total system dofs
 %----------------------------------------------
 % Create the nodes and give them their coordinates
 %----------------------------------------------
-generateMesh()
+% generateMesh()
 %CreateMesh
 %
 %----------------------------------------

@@ -235,8 +235,8 @@ W1NN = 2*rand(nnode,nnode)-1;			      % weigth matrix
 %
 KmaskNN 			= KK;
 % Kmask(Kmask~=0) = 1;
-V1NN		        = V1NN.*Kmask;
-W1NN                = W1NN.*Kmask;
+V1NN		        = V1NN.*KmaskNN;
+W1NN                = W1NN.*KmaskNN;
 V0NN                = V1NN;
 W0NN                = W1NN;                     %%YO AGREGUE ESTO PARA INICIALIZAR EN SIMULINK
 %
@@ -246,10 +246,10 @@ K1NN	  = 2.2802;
 K2NN	  = 2.7468;
 INN       = eye(nnode);
 lNN 	  = 1.1620;
-PNN       = I;%SPDmatrix(nnode);
+PNN       = INN;%SPDmatrix(nnode);
 LambdaNN  = SPDmatrix(nnode);
 aaNN      = -25;%-51.1440;
-ANN       = aa*eye(nnode);   
+ANN       = aaNN*eye(nnode);   
 
 
 function A = SPDmatrix(size)
