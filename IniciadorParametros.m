@@ -1,6 +1,9 @@
-clear Kc Mc Dc mu mu2 betap betav
+%clear Kc Mc Dc mu mu2 betap betav
+clearvars
 close all
 
+
+f=20;        %que nodo quiero leer
 % Valores de la viga
 ne=21;      %Nodos
 nne=2;      %Nodos Elementos
@@ -15,7 +18,7 @@ b=25e-3;    %broadness m
 
 area=b*d;   %cross-sectional area
 %area=a^2;
-I=a^4/12;   %m4 moment of area
+I=a^4/12;   %m4 moment of inertia
 %Iy=b*d^3/12; %area moment for forces on z-axis Fz
 
 %Iz=b^3*d/12;
@@ -32,7 +35,7 @@ x=x';
 yo=zeros(nn,1);
 nodes=zeros(ne,nne);
 for i=1:ne
-nodes(i,:)=[i,i+1];
+    nodes(i,:)=[i,i+1];
 end
 
 %Initialize stiffness and mass matrix
@@ -138,87 +141,6 @@ Psi2=[Phi'*Mbc,zeros(nq);zeros(nq),Phi'*Mbc];
 Phi2=[Phi,zeros(nq);zeros(nq),Phi];
 iPhi=inv(Phi);
 
-% %modal reduction
-r=5;
-k=2*r;
-W2r=W2(1:r,1:r);
-Zr=Z(1:r,1:r);
-Phir=Phi(:,1:r);
-iPhir=iPhi(1:r,:);
-Phir2=[Phir,zeros(nq,r);zeros(nq,r),Phir];
-iPhir2=[iPhir,zeros(r,nq);zeros(r,nq),iPhir];
-
-Am2=[zeros(r,r),eye(r);
-    -W2r, -Zr];
-Bm2=[zeros(r,m);                    %%%This will be useful for optimal SAP
-    Phir'*Fbc];
-
-Cm2=[Hbc*Phir,zeros(p,r)];
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-[zeta_min,i]=min(zeta);
-cr=zeros(1,r);
-i=1;  %mode
-cr(i)=1;
-Cv=[zeros(1,r),cr];
-Cp=[cr,zeros(1,r)];
-
-Cm=[ones(1,r),zeros(1,r)];
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%Sensor Actuator Performance Measure (SAP)
-
-zetad=1/sqrt(2);
-zetad=0.7;
-zetad=1;
-zetag=zetad-zeta(i);
-
-
-
-PhiB=Phir'*Fbc;
-PhiC=Hbc*Phir;
-PB=Phi'*Fbc;
-PC=Hbc*Phi;
-
-L1=max(abs(PhiB(i,:)));
-L2=min(abs(PhiB(i,:)));
-
-rmodes=1:r;
-rmodes(i)=[]; %residual modes
-
-
-mu0=zeros(p,m);
-mu1=zeros(p,m);
-beta=zeros(p,m);
-betav=zeros(p,m);
-au=zeros(1,r-1);
-
-
-for h=1:p
-    ci=abs(PhiC(h,i));
-    
-    for f=1:m
-        bi=abs(PhiB(i,f));
-        if (ci*bi)<1e-9 
-            mu0(h,f)=inf;     
-        else
-            for j=1:r-1
-                rm=rmodes(j);
-                au(j)=abs(PhiC(h,rm))*abs(PhiB(rm,f))/abs(w2(rm)-w2(i));
-                c2(j) =abs(PhiC(h,rm))*abs(PhiB(rm,f))/sqrt((w2(rm)-w2(i))^2+(2*zeta(rm)*w(rm)*w(i))^2);
-                c8(j)=abs(PhiC(h,rm))*abs(PhiB(rm,f))/(2*zeta(rm)*w(rm));           
-            end      
-        end
-        mu0(h,f)=L1*ci/(2*zeta(i)*w2(i));
-        mu1(h,f)=L1*sum(au)/bi;   
-        beta(h,f)=L1*ci/(2*zetad*w2(i))+mu1(h,f);
-        betav(h,f)=L1*ci/(2*zetad*w(i))+mu1(h,f);
-    end
-end
-
-%mu  %Utilizamos |G^j|, que es menor que la norma infinita de G
-%mu2 %Utlizamos norma infinita
 
 %% DNN
 %----------------------------------------------
@@ -227,13 +149,14 @@ end
 % global V1 W1 sigmoid K1 K2 P V0 l Lambda A 
 % Agregue NN A TODAS LAS VARIABLES PARA EVITAR CONFUSIONES DE ESTA PARTE Y
 % LA ANTERIOR
-nnode=44;                              %Está relacionado a FF
+nnode=80;                              %Está relacionado a FF
 V1NN = 2*rand(nnode,nnode)-1;			      % weigth matrix
 W1NN = 2*rand(nnode,nnode)-1;			      % weigth matrix
 % us = MeasureData(0);                % "real" measurement
 % u  = us;                            % first state of the system
 %
-KmaskNN 			= KK;
+KmaskNN 			= [zeros(nq,nq),eye(nq);
+                        Kbc  ,Dbc]; ;
 % Kmask(Kmask~=0) = 1;
 V1NN		        = V1NN.*KmaskNN;
 W1NN                = W1NN.*KmaskNN;
